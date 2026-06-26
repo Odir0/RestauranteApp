@@ -1,0 +1,209 @@
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<div class="container mt-5">
+    <div class="card bg-dark text-light shadow-lg">
+        <div class="card-header text-center">
+            <h2 class="mb-0">📊 Dashboard Financiero</h2>
+        </div>
+        <div class="card-body">
+            <div class="row mb-4 text-center">
+                <div class="col-md-4 mb-3">
+                    <div class="card bg-success text-white shadow">
+                        <div class="card-body">
+                            <h4>Total Ventas</h4>
+                            <p class="fs-4">@ViewBag.TotalVentas.ToString("N2")</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <div class="card bg-danger text-white shadow">
+                        <div class="card-body">
+                            <h4>Total Gastos</h4>
+                            <p class="fs-4">@ViewBag.TotalGastos.ToString("N2")</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <div class="card bg-info text-white shadow">
+                        <div class="card-body">
+                            <h4>Balance</h4>
+                            <p class="fs-4">@ViewBag.Balance.ToString("N2")</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <hr class="border-secondary" />
+
+            <h3 class="text-center mb-4">📈 Gráficos</h3>
+            <div class="row">
+                <div class="col-md-6 mb-4">
+                    <div class="card bg-dark text-light shadow">
+                        <div class="card-body">
+                            <canvas id="ventasGastosChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-4">
+                    <div class="card bg-dark text-light shadow">
+                        <div class="card-body">
+                            <canvas id="cierresDiariosChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <hr class="border-secondary" />
+
+            <h3 class="text-center mb-3">📅 Cierres Diarios (últimos 7)</h3>
+            <div class="table-responsive">
+                <table class="table table-dark table-hover table-striped align-middle">
+                    <thead class="table-secondary text-dark">
+                        <tr>
+                            <th>Fecha</th>
+                            <th>Ventas</th>
+                            <th>Gastos</th>
+                            <th>Balance</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var cierre in ViewBag.CierresDiarios)
+                        {
+                            <tr>
+                                <td>@cierre.Fecha.ToShortDateString()</td>
+                                <td>@cierre.TotalVentas.ToString("N2")</td>
+                                <td>@cierre.TotalGastos.ToString("N2")</td>
+                                <td>@cierre.Balance.ToString("N2")</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            <h3 class="text-center mt-4 mb-3">📆 Cierres Semanales (últimos 4)</h3>
+            <div class="table-responsive">
+                <table class="table table-dark table-hover table-striped align-middle">
+                    <thead class="table-secondary text-dark">
+                        <tr>
+                            <th>Inicio</th>
+                            <th>Fin</th>
+                            <th>Ventas</th>
+                            <th>Gastos</th>
+                            <th>Balance</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var cierre in ViewBag.CierresSemanales)
+                        {
+                            <tr>
+                                <td>@cierre.SemanaInicio.ToShortDateString()</td>
+                                <td>@cierre.SemanaFin.ToShortDateString()</td>
+                                <td>@cierre.TotalVentas.ToString("N2")</td>
+                                <td>@cierre.TotalGastos.ToString("N2")</td>
+                                <td>@cierre.Balance.ToString("N2")</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 text-center mt-3">
+        <a href="/Home/Index" class="btn btn-lg btn-vino">
+            ⬅️ Volver al inicio
+        </a>
+    </div>
+</div>
+
+
+<style>
+    .btn-vino {
+        background-color: #5a0f1b; /* vino oscuro */
+        color: #fff;
+        border: none;
+    }
+    .btn-vino:hover {
+        background-color: #7a1424;
+        transform: scale(1.05);
+    }
+</style>
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Gráfico de Ventas vs Gastos (Barras)
+        var ctxBar = document.getElementById('ventasGastosChart').getContext('2d');
+        var ventasGastosBarChart = new Chart(ctxBar, {
+            type: 'bar',
+            data: {
+                labels: ['Totales'],
+                datasets: [
+                    {
+                        label: 'Ventas',
+                        data: [@ViewBag.TotalVentas],
+                        backgroundColor: '#28a745' // verde
+                        
+                    },
+                    {
+                        label: 'Gastos',
+                        data: [@ViewBag.TotalGastos],
+                        backgroundColor: '#dc3545' // rojo
+                        
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                        labels: {
+                            color: '#FFFFFF',
+                            font: { size: 14 }
+                        }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                let value = context.parsed.y || 0;
+                                return `${context.dataset.label}: ${value.toLocaleString()}`;
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value) {
+                                return value.toLocaleString();
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // Gráfico de Cierres Diarios
+        var ctx2 = document.getElementById('cierresDiariosChart').getContext('2d');
+        var cierresDiariosChart = new Chart(ctx2, {
+            type: 'line',
+            data: {
+                labels: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(
+                    ((List<RestauranteApp.Models.CierreDiario>)ViewBag.CierresDiarios)
+                        .Select(c => c.Fecha.ToShortDateString())
+                )),
+                datasets: [{
+                    label: 'Balance Diario',
+                    data: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(
+                        ((List<RestauranteApp.Models.CierreDiario>)ViewBag.CierresDiarios)
+                            .Select(c => Math.Round(c.Balance, 2))
+                    )),
+                    borderColor: '#007bff',
+                    fill: false
+                }]
+            }
+        });
+    </script>
+}

@@ -1,0 +1,59 @@
+@model IEnumerable<RestauranteApp.Models.Gasto>
+
+<div class="container mt-5">
+    <div class="card bg-dark text-light shadow-lg">
+        <div class="card-header text-center">
+            <h2 class="mb-0">💸 Gastos del día</h2>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-dark table-hover table-striped align-middle">
+                    <thead class="table-secondary text-dark">
+                        <tr>
+                            <th>Fecha</th>
+                            <th>Monto</th>
+                            <th>Descripción</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var gasto in Model)
+                        {
+                            <tr>
+                                <td>@gasto.Fecha.ToShortDateString()</td>
+                                <td>@gasto.Monto.ToString("N2")</td>
+                                <td>@gasto.Descripcion</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            <hr class="border-secondary" />
+
+            <div class="row g-3" style="padding-bottom: 10px;">
+                    <div class="col-6 text-center mt-3">
+                        <a class="btn btn-lg btn-vino" href="/Gastos/Create">
+                            ➕ Registrar nuevo gasto
+                        </a>
+                    </div>
+                    <div class="col-6 text-center mt-3">
+                        <a href="/Home/Index" class="btn btn-lg btn-vino">
+                            ⬅️ Volver al inicio
+                        </a>
+                    </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .btn-vino {
+        background-color: #5a0f1b; /* vino oscuro */
+        color: #fff;
+        border: none;
+    }
+    .btn-vino:hover {
+        background-color: #7a1424; /* tono más claro al pasar el mouse */
+        transform: scale(1.05);
+    }
+</style>

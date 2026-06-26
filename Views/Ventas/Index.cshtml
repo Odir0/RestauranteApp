@@ -1,0 +1,60 @@
+@model IEnumerable<RestauranteApp.Models.Venta>
+
+<div class="container mt-5">
+    <div class="card bg-dark text-light shadow-lg">
+        <div class="card-header text-center">
+            <h2 class="mb-0">📊 Ventas del día</h2>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-dark table-hover table-striped align-middle">
+                    <thead class="table-secondary text-dark">
+                        <tr>
+                            <th>Fecha</th>
+                            <th>Monto</th>
+                            <th>Descripción</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var venta in Model)
+                        {
+                            <tr>
+                                <td>@venta.Fecha.ToShortDateString()</td>
+                                <td>@venta.Monto.ToString("N2")</td>
+                                <td>@venta.Descripcion</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            <hr class="border-secondary" />
+
+            <div class="row g-3 style="padding-bottom: 10px;">
+                <div class="col-6 text-center mt-3">
+                    <a class="btn btn-lg btn-vino" href="/Ventas/Create">
+                        ➕ Registrar nueva venta
+                    </a>
+                </div>
+                <div class="col-6 text-center mt-3">
+                    <a href="/Home/Index" class="btn btn-lg btn-vino">
+                        ⬅️ Volver al inicio
+                    </a>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+</div>
+
+<style>
+    .btn-vino {
+        background-color: #5a0f1b; /* vino oscuro */
+        color: #fff;
+        border: none;
+    }
+    .btn-vino:hover {
+        background-color: #7a1424; /* tono más claro */
+        transform: scale(1.05);
+    }
+</style>

@@ -1,0 +1,65 @@
+@model IEnumerable<RestauranteApp.Models.CierreDiario>
+
+<div class="container mt-5">
+    <div class="card bg-dark text-light shadow-lg">
+        <div class="card-header text-center">
+            <h2 class="mb-0">📆 Cierres Diarios</h2>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-dark table-hover table-striped align-middle">
+                    <thead class="table-secondary text-dark">
+                        <tr>
+                            <th>Fecha</th>
+                            <th>Total Ventas</th>
+                            <th>Total Gastos</th>
+                            <th>Balance</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var cierre in Model)
+                        {
+                            <tr>
+                                <td>@cierre.Fecha.ToShortDateString()</td>
+                                <td>@cierre.TotalVentas.ToString("N2")</td>
+                                <td>@cierre.TotalGastos.ToString("N2")</td>
+                                <td>@cierre.Balance.ToString("N2")</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            <hr class="border-secondary" />
+
+            <form asp-action="CrearCierre" method="get" class="row g-3">
+                <div class="col-md-12">
+                    <label class="form-label">Fecha del cierre</label>
+                    <input type="date" name="fecha" class="form-control bg-dark text-light border-secondary" />
+                </div>
+                <div class="col-6 text-center mt-3">
+                    <button type="submit" class="btn btn-lg btn-vino">
+                        ⚡ Generar cierre diario
+                    </button>
+                </div>
+                <div class="col-6 text-center mt-3">
+                    <a href="/Home/Index" class="btn btn-lg btn-vino">
+                        ⬅️ Volver al inicio
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<style>
+    .btn-vino {
+        background-color: #5a0f1b; /* vino oscuro */
+        color: #fff;
+        border: none;
+    }
+    .btn-vino:hover {
+        background-color: #7a1424; /* tono más claro al pasar el mouse */
+        transform: scale(1.05);
+    }
+</style>
