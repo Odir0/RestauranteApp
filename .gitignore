@@ -1,0 +1,14 @@
+# Ignorar carpetas de compilación
+bin/
+obj/
+
+# Ignorar archivos temporales y de usuario
+*.user
+*.db
+*.sqlite
+*.log
+
+# Ignorar publicaciones locales
+/publish/
+/bin/Release/
+/bin/Debug/
