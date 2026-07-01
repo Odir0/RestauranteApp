@@ -1,11 +1,11 @@
-# Etapa de compilación
-FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+# Etapa de compilación con .NET 9
+FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 WORKDIR /src
 COPY . .
 RUN dotnet publish -c Release -o /app
 
-# Etapa de ejecución
-FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
+# Etapa de ejecución con .NET 9
+FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS runtime
 WORKDIR /app
 COPY --from=build /app .
 ENTRYPOINT ["dotnet", "RestauranteApp.dll"]
